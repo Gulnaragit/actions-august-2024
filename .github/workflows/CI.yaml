@@ -1,19 +1,77 @@
+# name: CI
+
+# on:
+#   # push:
+#   #   branches: [ "main" ]
+
+# workflow_dispatch:
+#   inputs:
+#     docker_image: 
+#       description: 'Enter image name'
+#       required: true
+#       default: ''
+#     docker_tag: 
+#       description: 'Enter image tag'
+#       required: true
+#       default: ''      
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Setup python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.10'
+
+#       - run: pip install pytest flask-testing
+
+#       - run: pytest
+
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v3
+#         with:
+#           username: ${{ secrets.DOCKERHUB_USERNAME }}
+#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+#       - name: Build and push
+#         uses: docker/build-push-action@v6
+#         with:
+#           push: false
+#           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image}}:${{ inputs.docker_tag}}
+
+#       - name: Run Trivy vulnerability scanner
+#         uses: aquasecurity/trivy-action@0.28.0
+#         with:
+#           image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image}}:${{ inputs.docker_tag}}'
+#           format: 'table'   
+
+#       - name: Build and push
+#         uses: docker/build-push-action@v6
+#         with:
+#           push: true
+#           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image}}:${{ inputs.docker_tag}}
+
+
 name: CI
 
 on:
   # push:
   #   branches: [ "main" ]
 
-workflow_dispatch:
-  inputs:
-    docker_image: 
-      description: 'Enter image name'
-      required: true
-      default: ''
-    docker_tag: 
-      description: 'Enter image tag'
-      required: true
-      default: ''      
+  workflow_dispatch:
+    inputs:
+      docker_image:
+        description: 'Enter image name'
+        required: true
+        default: ''
+      docker_tag:
+        description: 'Enter image tag'
+        required: true
+        default: ''
 
 jobs:
   build:
@@ -41,16 +99,16 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image}}:${{ inputs.docker_tag}}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image }}:${{ inputs.docker_tag }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image}}:${{ inputs.docker_tag}}'
-          format: 'table'   
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image }}:${{ inputs.docker_tag }}'
+          format: 'table'
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image}}:${{ inputs.docker_tag}}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.docker_image }}:${{ inputs.docker_tag }}
